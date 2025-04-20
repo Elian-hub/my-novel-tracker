@@ -1,28 +1,28 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useMutation } from "@tanstack/react-query";
-import { Form, Input, Button, Upload } from "antd";
-import { UploadOutlined, LeftOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
-import { queryClient } from "../../utils/localStorageService";
-import { useNotification, useTheme } from "../../store/context";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
+import { Form, Input, Button, Upload } from 'antd';
+import { UploadOutlined, LeftOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { queryClient } from '../../utils/localStorageService';
+import { useNotification, useTheme } from '../../store/context';
 
 const signUpUser = async (data) => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   const formData = new FormData();
-  formData.append("email", data.email);
-  formData.append("password", data.password);
-  formData.append("confirmPassword", data.confirmPassword);
-  formData.append("name", data.name);
+  formData.append('email', data.email);
+  formData.append('password', data.password);
+  formData.append('confirmPassword', data.confirmPassword);
+  formData.append('name', data.name);
 
   if (data.profileImage) {
-    formData.append("profileImage", data.profileImage);
+    formData.append('profileImage', data.profileImage);
   }
 
   const response = await axios.post(`${baseUrl}/api/users/signup`, formData, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      'Content-Type': 'multipart/form-data',
     },
     withCredentials: true,
   });
@@ -37,9 +37,9 @@ const Signup = () => {
   const triggerNotification = useNotification();
 
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    name: "",
+    email: '',
+    password: '',
+    name: '',
     profileImage: null,
   });
 
@@ -62,28 +62,28 @@ const Signup = () => {
   };
 
   const customRequest = ({ file, onSuccess }) => {
-    setTimeout(() => onSuccess("ok"), 1000);
+    setTimeout(() => onSuccess('ok'), 1000);
   };
 
   const handleNavigate = () => {
-    navigate("/auth/login");
+    navigate('/auth/login');
   };
   const { mutate, isPending } = useMutation({
-    mutationKey: ["signUpUser"],
+    mutationKey: ['signUpUser'],
     mutationFn: signUpUser,
     onSuccess: async (data) => {
       triggerNotification({
-        type: "success",
-        message: "Success",
-        description: data.message || "Sign up successful!",
+        type: 'success',
+        message: 'Success',
+        description: data.message || 'Sign up successful!',
       });
-      await queryClient.invalidateQueries(["signUpUser"]);
-      navigate("/auth/login");
+      await queryClient.invalidateQueries(['signUpUser']);
+      navigate('/auth/login');
     },
     onError: (error) => {
       triggerNotification({
-        type: "error",
-        message: "Error",
+        type: 'error',
+        message: 'Error',
         description: error?.response?.data?.message,
       });
     },
@@ -104,20 +104,20 @@ const Signup = () => {
   };
 
   return (
-    <div className="p-5">
-      <div className="my-2">
+    <div className='p-5'>
+      <div className='my-2'>
         <span>
           <button
             className={`focus:outline-none hover:text-[#FFA500] ${
-              theme === "dark" ? "text-white" : "text-black"
+              theme === 'dark' ? 'text-white' : 'text-black'
             }`}
           >
-            <LeftOutlined className="mr-6" onClick={handleNavigate} />
+            <LeftOutlined className='mr-6' onClick={handleNavigate} />
           </button>
         </span>
         <span
           className={`text-lg font-semibold text-left ${
-            theme === "dark" ? "text-white" : "text-black"
+            theme === 'dark' ? 'text-white' : 'text-black'
           }`}
         >
           Signup
@@ -125,107 +125,107 @@ const Signup = () => {
       </div>
       <Form
         form={form}
-        layout="vertical"
+        layout='vertical'
         onFinish={handleSubmit}
         initialValues={formData}
       >
         {/* Name Field */}
         <Form.Item
-          label="Name"
-          name="name"
-          rules={[{ required: true, message: "Please enter your name!" }]}
+          label='Name'
+          name='name'
+          rules={[{ required: true, message: 'Please enter your name!' }]}
         >
           <Input
-            name="name"
+            name='name'
             value={formData.name}
             onChange={handleChange}
-            placeholder="Enter your name"
+            placeholder='Enter your name'
           />
         </Form.Item>
         {/* Email Field */}
         <Form.Item
-          label="Email"
-          name="email"
+          label='Email'
+          name='email'
           rules={[
-            { required: true, message: "Please enter your email!" },
-            { type: "email", message: "Invalid email!" },
+            { required: true, message: 'Please enter your email!' },
+            { type: 'email', message: 'Invalid email!' },
           ]}
         >
           <Input
-            name="email"
+            name='email'
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
+            placeholder='Enter your email'
           />
         </Form.Item>
 
         {/* Password Field */}
         <Form.Item
-          label="Password"
-          name="password"
+          label='Password'
+          name='password'
           rules={[
-            { required: true, message: "Please enter your password!" },
+            { required: true, message: 'Please enter your password!' },
             {
               min: 8,
-              message: "Password must be at least 8 characters long!",
+              message: 'Password must be at least 8 characters long!',
             },
             {
               pattern:
                 /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
               message:
-                "Password must have at least one uppercase letter, one lowercase letter, one number, and one special character!",
+                'Password must have at least one uppercase letter, one lowercase letter, one number, and one special character!',
             },
           ]}
         >
           <Input.Password
-            name="password"
+            name='password'
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter your password"
+            placeholder='Enter your password'
           />
         </Form.Item>
         {/* Confirm Password Field */}
         <Form.Item
-          label="Confirm Password"
-          name="confirmPassword"
-          dependencies={["password"]}
+          label='Confirm Password'
+          name='confirmPassword'
+          dependencies={['password']}
           rules={[
-            { required: true, message: "Please confirm your password!" },
+            { required: true, message: 'Please confirm your password!' },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
+                if (!value || getFieldValue('password') === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The two passwords do not match!")
+                  new Error('The two passwords do not match!')
                 );
               },
             }),
           ]}
         >
           <Input.Password
-            name="confirmPassword"
+            name='confirmPassword'
             value={formData.confirmPassword}
             onChange={handleChange}
-            placeholder="Confirm your password"
+            placeholder='Confirm your password'
           />
         </Form.Item>
         {/* Profile Image Upload */}
-        <Form.Item label="Profile Image" name="profileImage">
+        <Form.Item label='Profile Image' name='profileImage'>
           <Upload
-            name="profileImage"
-            listType="picture"
+            name='profileImage'
+            listType='picture'
             fileList={fileList}
-            className="upload-list-inline"
+            className='upload-list-inline'
             onChange={handleImageChange}
             customRequest={customRequest}
             beforeUpload={(file) => {
-              const isImage = file.type.startsWith("image/");
+              const isImage = file.type.startsWith('image/');
               if (!isImage) {
                 triggerNotification({
-                  type: "error",
-                  message: "Error",
-                  description: "You can only upload image files!",
+                  type: 'error',
+                  message: 'Error',
+                  description: 'You can only upload image files!',
                 });
               }
               return isImage;
@@ -237,19 +237,19 @@ const Signup = () => {
         </Form.Item>
         {/* Submit Button */}
         <Form.Item>
-          <div className="flex flex-col md:flex-row gap-1">
+          <div className='flex flex-col md:flex-row gap-1'>
             <Button
-              htmlType="button"
-              className="w-full py-2 h-full shadow-none"
+              htmlType='button'
+              className='w-full py-2 h-full shadow-none'
               onClick={handleNavigate}
               disabled={isPending}
             >
               Signin
             </Button>
             <Button
-              type="primary"
-              htmlType="submit"
-              className="w-full py-2 h-full shadow-none"
+              type='primary'
+              htmlType='submit'
+              className='w-full py-2 h-full shadow-none'
               loading={isPending}
             >
               Signup
